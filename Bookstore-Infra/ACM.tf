@@ -1,33 +1,33 @@
-    # # Variables
-    # variable "domain_name" {
-    #   description = "bookstore-Public-ALB-2112943775.us-east-1.elb.amazonaws.com"
-    # }
+# # Variables
+# variable "domain_name" {
+#   description = "bookstore-Public-ALB-2112943775.us-east-1.elb.amazonaws.com"
+# }
 
-    # # ACM Certificate
-    # resource "aws_acm_certificate" "ssl_certificate" {
-    #   domain_name       = var.domain_name
-    #   validation_method = "DNS"
+# # ACM Certificate
+# resource "aws_acm_certificate" "ssl_certificate" {
+#   domain_name       = var.domain_name
+#   validation_method = "DNS"
 
-    #   lifecycle {
-    #     create_before_destroy = true
-    #   }
-    # }
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
-    # # Route 53 Hosted Zone
-    # resource "aws_route53_zone" "my_zone" {
-    #   name = var.domain_name
-    # }
+# # Route 53 Hosted Zone
+# resource "aws_route53_zone" "my_zone" {
+#   name = var.domain_name
+# }
 
-    # # ACM Certificate DNS Validation Record
-    # resource "aws_route53_record" "acm_validation" {
-    #   for_each = aws_acm_certificate.ssl_certificate.domain_validation_options
+# # ACM Certificate DNS Validation Record
+# resource "aws_route53_record" "acm_validation" {
+#   for_each = aws_acm_certificate.ssl_certificate.domain_validation_options
 
-    #   name    = each.value.resource_record_name
-    #   type    = each.value.resource_record_type
-    #   records = [each.value.resource_record_value]
-    #   zone_id = aws_route53_zone.my_zone.zone_id
-    #   ttl     = 60
-    # }
+#   name    = each.value.resource_record_name
+#   type    = each.value.resource_record_type
+#   records = [each.value.resource_record_value]
+#   zone_id = aws_route53_zone.my_zone.zone_id
+#   ttl     = 60
+# }
 
 
 

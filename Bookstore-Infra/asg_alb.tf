@@ -1,4 +1,4 @@
-  resource "aws_launch_configuration" "ecs_launch" {
+resource "aws_launch_configuration" "ecs_launch" {
   name          = "${var.project}-Launch-config"
   image_id      = var.AMI
   instance_type = var.asg_instance_type

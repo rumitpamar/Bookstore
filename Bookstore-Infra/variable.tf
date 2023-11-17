@@ -102,7 +102,7 @@ variable "db_instance_class" {
 
 variable "repository_names" {
   type    = list(string)
-  default = [ "host", "web", "auth", "migrator"]
+  default = ["host", "web", "auth", "migrator"]
 }
 
 # variable "launch_configuration_name" {
