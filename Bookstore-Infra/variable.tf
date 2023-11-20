@@ -65,7 +65,7 @@ variable "key_name" {
   type        = string
   description = "Key Name"
   # default     = "./bookstore.pub"
-  default = "Rumit_Key"
+  default = "Bookstore_key"#"Rumit_Key"
 }
 
 ##########################################################################
@@ -102,7 +102,7 @@ variable "db_instance_class" {
 
 variable "repository_names" {
   type    = list(string)
-  default = ["host", "web", "auth", "migrator"]
+  default = ["bookstore"]
 }
 
 # variable "launch_configuration_name" {

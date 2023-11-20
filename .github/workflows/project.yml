@@ -51,50 +51,102 @@ jobs:
       with:
         registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
     
-    - name: Build and push Docker image -Migrator
+    - name: Build and push Docker image - Migrator
       run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MIGRATOR }}:latest --target migrator .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MIGRATOR }}:latest
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:migrator-latest --target migrator .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:migrator-latest
 
     - name: Build and push Docker image - WEB
       run: |
-        docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.WEB }}:latest --target web .
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.WEB }}:latest
-  
-  
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:web-latest --target web .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:web-latest
 
-    - name: Build and push Docker image -Auth
+    - name: Build and push Docker image - Auth
       run: |
-        docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.AUTH }}:latest --target auth .
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.AUTH }}:latest
-  
-          
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:auth-latest --target auth .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:auth-latest
 
     - name: Build and push Docker image - App
       run: |
-             docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.HOST }}:latest --target host .
-             docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.HOST }}:latest
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:app-latest --target host .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:app-latest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # - name: Build and push Docker image -Migrator
+    #   run: |
+    #       docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MIGRATOR }}:latest --target migrator .
+    #       docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MIGRATOR }}:latest
+
+    # - name: Build and push Docker image - WEB
+    #   run: |
+    #     docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.WEB }}:latest --target web .
+    #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.WEB }}:latest
+  
+  
+
+    # - name: Build and push Docker image -Auth
+    #   run: |
+    #     docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.AUTH }}:latest --target auth .
+    #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.AUTH }}:latest
+  
+          
+
+    # - name: Build and push Docker image - App
+    #   run: |
+    #          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.HOST }}:latest --target host .
+    #          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.HOST }}:latest
                 
 
-    - name: Update ECS service
-      run: |
-          aws ecs update-service --cluster bookstore-cluster --service app --force-new-deployment --debug
+    # - name: Update ECS service
+    #   run: |
+    #       aws ecs update-service --cluster bookstore-cluster --service app --force-new-deployment --debug
 
 
          
-    - name: Update ECS service
-      run: |
-         aws ecs update-service --cluster bookstore-cluster --service migrator --force-new-deployment --debug
+    # - name: Update ECS service
+    #   run: |
+    #      aws ecs update-service --cluster bookstore-cluster --service migrator --force-new-deployment --debug
 
 
-    - name: Update ECS service
-      run: |
-        aws ecs update-service --cluster bookstore-cluster --service auth --force-new-deployment --debug
+    # - name: Update ECS service
+    #   run: |
+    #     aws ecs update-service --cluster bookstore-cluster --service auth --force-new-deployment --debug
 
           
-    - name: Update ECS service
-      run: |
-          aws ecs update-service --cluster bookstore-cluster --service web --force-new-deployment --debug
+    # - name: Update ECS service
+    #   run: |
+    #       aws ecs update-service --cluster bookstore-cluster --service web --force-new-deployment --debug
 
           
 
