@@ -1,116 +1,3 @@
-# resource "aws_ecs_cluster" "ecs_cluster" {
-#   name = "${var.project}-cluster"
-# }
-
-# resource "aws_ecs_task_definition" "migrator_task_definition" {
-#   family                   = "combined"
-#   requires_compatibilities = ["EC2"]
-
-#   container_definitions = jsonencode([
-#     {
-#       "name": "migrator-container",
-#       "image": "${aws_ecr_repository.ecr_repo[0].repository_url}:migrator-latest",
-#       "portMappings": [
-#         {
-#           "containerPort": 80,
-#           "hostPort": 8080
-#         }
-#       ],
-#       "memory": 512,
-#       "memoryReservation": 256
-#     },
-#     {
-#       "name": "web-container",
-#       "image": "${aws_ecr_repository.ecr_repo[0].repository_url}:web-latest",
-#       "portMappings": [
-#         {
-#           "containerPort": 80,
-#           "hostPort": 8081
-#         }
-#       ],
-#       "memory": 512,
-#       "memoryReservation": 256
-#     },
-#     {
-#       "name": "auth-container",
-#       "image": "${aws_ecr_repository.ecr_repo[0].repository_url}:auth-latest",
-#       "portMappings": [
-#         {
-#           "containerPort": 80,
-#           "hostPort": 8082
-#         }
-#       ],
-#       "memory": 512,
-#       "memoryReservation": 256
-#     },
-#     {
-#       "name": "app-container",
-#       "image": "${aws_ecr_repository.ecr_repo[0].repository_url}:app-latest",
-#       "portMappings": [
-#         {
-#           "containerPort": 80,
-#           "hostPort": 8083
-#         }
-#       ],
-#       "memory": 512,
-#       "memoryReservation": 256
-#     }
-#   ])
-# }
-
-
-# resource "aws_ecs_service" "migrator_service" {
-#   name            = "${var.project}-migrator-service"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   launch_type     = "EC2"  # Or FARGATE if applicable
-#   desired_count   = 1
-
-# }
-
-# resource "aws_ecs_service" "web_service" {
-#   name            = "${var.project}-web-service"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   launch_type     = "EC2"  
-#   desired_count   = 1
-
-
-# }
-
-# resource "aws_ecs_service" "auth_service" {
-#   name            = "${var.project}-auth-service"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   launch_type     = "EC2"  
-#   desired_count   = 1
-
-# }
-
-# resource "aws_ecs_service" "app_service" {
-#   name            = "${var.project}-app-service"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   launch_type     = "EC2" 
-#   desired_count   = 1
-
-# }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -119,73 +6,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.project}-cluster"
 }
 
-#######################   ECS task for app   #######################
-
-resource "aws_ecs_task_definition" "app_task_definition" {
-  family                   = "app"
-  requires_compatibilities = ["EC2"]
-  container_definitions = jsonencode([
-    {
-      "name" : "app-container",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:app-latest",
-      "portMappings" : [
-        {
-          "containerPort" : 80,
-          "hostPort" : 80
-        }
-      ],
-      "memory" : 512,
-      "memoryReservation" : 256,
-    },
-  ])
-}
-
-resource "aws_ecs_service" "app" {
-  name            = "app"
-  cluster         = aws_ecs_cluster.ecs_cluster.id
-  task_definition = aws_ecs_task_definition.app_task_definition.arn
-  desired_count   = 1
-  depends_on      = [aws_ecs_service.migrator]
-}
-
-
-#######################   ECS task for auth   #######################
-
-
-
-resource "aws_ecs_task_definition" "auth_task_definition" {
-  family                   = "auth"
-  requires_compatibilities = ["EC2"]
-  container_definitions = jsonencode([
-    {
-      "name" : "auth-container",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:auth-latest",
-      "portMappings" : [
-        {
-          "containerPort" : 80,
-          "hostPort" : 80
-        }
-      ],
-      "memory" : 512,
-      "memoryReservation" : 256,
-
-    },
-  ])
-}
-
-resource "aws_ecs_service" "auth" {
-  name            = "auth"
-  cluster         = aws_ecs_cluster.ecs_cluster.id
-  task_definition = aws_ecs_task_definition.auth_task_definition.arn
-  desired_count   = 1
-  depends_on      = [aws_ecs_service.migrator]
-}
-
-
-
 #######################   ECS task for migrator   #######################
-
-
 
 resource "aws_ecs_task_definition" "migrator_task_definition" {
   family                   = "migrator"
@@ -193,7 +14,7 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "migrator",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:migrator-lates",
+      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:migrator-latest",
       "portMappings" : [
         {
           "containerPort" : 80,
@@ -202,7 +23,6 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
       ],
       "memory" : 512,
       "memoryReservation" : 256,
-
     },
   ])
 }
@@ -214,36 +34,117 @@ resource "aws_ecs_service" "migrator" {
   desired_count   = 1
 }
 
+#######################   ECS task for app, auth, web   #######################
 
-#######################   ECS task for web   #######################
-
-resource "aws_ecs_task_definition" "web_task_definition" {
-  family                   = "web"
+resource "aws_ecs_task_definition" "app_auth_web_task_definition" {
+  family                   = "app-auth-web"
   requires_compatibilities = ["EC2"]
   container_definitions = jsonencode([
+    {
+      "name" : "app",
+      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:app-latest",
+      "portMappings" : [
+        {
+          "containerPort" : 8080,
+          "hostPort" : 80
+        }
+      ],
+      "memory" : 512,  
+      "memoryReservation" : 256,  
+     
+    },
+    {
+      "name" : "auth",
+      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:auth-latest",
+      "portMappings" : [
+        {
+          "containerPort" : 8181,
+          "hostPort" : 81
+        }
+      ],
+      "memory" : 512,  
+      "memoryReservation" : 256,  
+    },
     {
       "name" : "web",
       "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:web-latest",
       "portMappings" : [
         {
-          "containerPort" : 80,
-          "hostPort" : 80
+          "containerPort" : 8282,
+          "hostPort" : 82
         }
       ],
-      "memory" : 512,
-      "memoryReservation" : 256,
-
+      "memory" : 512,  
+      "memoryReservation" : 256,  
     },
   ])
+}
+
+
+resource "aws_ecs_service" "app_auth_web" {
+  name            = "app-auth-web"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.app_auth_web_task_definition.arn
+  desired_count   = 0
+  depends_on      = [aws_ecs_service.migrator]
+}
+
+resource "aws_ecs_service" "app" {
+  name            = "app"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.app_auth_web_task_definition.arn
+  desired_count   = 1
+  depends_on      = [aws_ecs_service.app_auth_web]
+}
+
+resource "aws_ecs_service" "auth" {
+  name            = "auth"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.app_auth_web_task_definition.arn
+  desired_count   = 1
+  depends_on      = [aws_ecs_service.app_auth_web]
 }
 
 resource "aws_ecs_service" "web" {
   name            = "web"
   cluster         = aws_ecs_cluster.ecs_cluster.id
-  task_definition = aws_ecs_task_definition.web_task_definition.arn
+  task_definition = aws_ecs_task_definition.app_auth_web_task_definition.arn
   desired_count   = 1
-  depends_on      = [aws_ecs_service.migrator]
+  depends_on      = [aws_ecs_service.app_auth_web]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -251,7 +152,7 @@ resource "aws_ecs_service" "web" {
 #   name = "${var.project}-cluster"
 # }
 
-#######################   ECS task for app   #######################
+# #######################   ECS task for app   #######################
 
 # resource "aws_ecs_task_definition" "app_task_definition" {
 #   family                   = "app"
@@ -259,7 +160,7 @@ resource "aws_ecs_service" "web" {
 #   container_definitions = jsonencode([
 #     {
 #       "name" : "app-container",
-#       "image" : "app:latest",
+#       "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:app-latest",
 #       "portMappings" : [
 #         {
 #           "containerPort" : 80,
@@ -268,9 +169,6 @@ resource "aws_ecs_service" "web" {
 #       ],
 #       "memory" : 512,
 #       "memoryReservation" : 256,
-#       "dockerLabels" : {
-#         "image" : "nginx"
-#       }
 #     },
 #   ])
 # }
@@ -280,11 +178,13 @@ resource "aws_ecs_service" "web" {
 #   cluster         = aws_ecs_cluster.ecs_cluster.id
 #   task_definition = aws_ecs_task_definition.app_task_definition.arn
 #   desired_count   = 1
-#   depends_on      = [aws_ecs_service.migrator] # Ensure this service starts after the migrator
+#   depends_on      = [aws_ecs_service.migrator]
 # }
 
 
-# # #######################   ECS task for auth   #######################
+# #######################   ECS task for auth   #######################
+
+
 
 # resource "aws_ecs_task_definition" "auth_task_definition" {
 #   family                   = "auth"
@@ -292,18 +192,16 @@ resource "aws_ecs_service" "web" {
 #   container_definitions = jsonencode([
 #     {
 #       "name" : "auth-container",
-#       "image" : "auth:latest",
+#       "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:auth-latest",
 #       "portMappings" : [
 #         {
-#           "containerPort" : 80, 
+#           "containerPort" : 80,
 #           "hostPort" : 80
 #         }
 #       ],
 #       "memory" : 512,
 #       "memoryReservation" : 256,
-#       "dockerLabels" : {
-#         "image" : "nginx"
-#       }
+
 #     },
 #   ])
 # }
@@ -313,16 +211,14 @@ resource "aws_ecs_service" "web" {
 #   cluster         = aws_ecs_cluster.ecs_cluster.id
 #   task_definition = aws_ecs_task_definition.auth_task_definition.arn
 #   desired_count   = 1
-#   depends_on      = [aws_ecs_service.migrator] # Ensure this service starts after the migrator
+#   depends_on      = [aws_ecs_service.migrator]
 # }
 
 
-# #######################   ECS task for db   #######################
-
-# /* Resource definitions for the db task and service are commented out */
-
 
 # #######################   ECS task for migrator   #######################
+
+
 
 # resource "aws_ecs_task_definition" "migrator_task_definition" {
 #   family                   = "migrator"
@@ -330,7 +226,7 @@ resource "aws_ecs_service" "web" {
 #   container_definitions = jsonencode([
 #     {
 #       "name" : "migrator",
-#       "image" : "migrator:latest",
+#       "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:migrator-lates",
 #       "portMappings" : [
 #         {
 #           "containerPort" : 80,
@@ -339,9 +235,7 @@ resource "aws_ecs_service" "web" {
 #       ],
 #       "memory" : 512,
 #       "memoryReservation" : 256,
-#       "dockerLabels" : {
-#         "image" : "nginx"
-#       }
+
 #     },
 #   ])
 # }
@@ -354,7 +248,7 @@ resource "aws_ecs_service" "web" {
 # }
 
 
-# # #######################   ECS task for web   #######################
+# #######################   ECS task for web   #######################
 
 # resource "aws_ecs_task_definition" "web_task_definition" {
 #   family                   = "web"
@@ -362,7 +256,7 @@ resource "aws_ecs_service" "web" {
 #   container_definitions = jsonencode([
 #     {
 #       "name" : "web",
-#       "image" : "web:latest",
+#       "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:web-latest",
 #       "portMappings" : [
 #         {
 #           "containerPort" : 80,
@@ -371,9 +265,7 @@ resource "aws_ecs_service" "web" {
 #       ],
 #       "memory" : 512,
 #       "memoryReservation" : 256,
-#       "dockerLabels" : {
-#         "image" : "nginx"
-#       }
+
 #     },
 #   ])
 # }
@@ -383,74 +275,11 @@ resource "aws_ecs_service" "web" {
 #   cluster         = aws_ecs_cluster.ecs_cluster.id
 #   task_definition = aws_ecs_task_definition.web_task_definition.arn
 #   desired_count   = 1
-#   depends_on      = [aws_ecs_service.migrator] # Ensure this service starts after the migrator
-# }
-
-
-
-
-
-
-
-
-
-###########################################################################################################################################
-
-
-
-
-
-# # Define ECS Cluster
-# resource "aws_ecs_cluster" "ecs_cluster" {
-#   name = "${var.project}-cluster"
-# }
-
-# # Define Dbmigrator Task
-# resource "aws_ecs_task_definition" "migrator_task_definition" {
-#   family                   = "migrator"
-#   requires_compatibilities = ["EC2"]
-#   container_definitions = jsonencode([
-#     {
-#       "name" : "migrator",
-#       "image" : "migrator:latest",
-#       "command" : ["/bin/bash", "-c", "echo 'Running migration process'; sleep 60"],  # Replace with your migration command
-#       "memory" : 512,
-#       "memoryReservation" : 256
-#     },
-#   ])
-# }
-
-# # Define Dbmigrator Service
-# resource "aws_ecs_service" "migrator" {
-#   name            = "migrator"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   desired_count   = 1
-# }
-
-# # Define App Service
-# resource "aws_ecs_service" "app" {
-#   name            = "app"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   desired_count   = 1
 #   depends_on      = [aws_ecs_service.migrator]
 # }
 
-# # Define Auth Service
-# resource "aws_ecs_service" "auth" {
-#   name            = "auth"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   desired_count   = 1
-#   depends_on      = [aws_ecs_service.migrator]
-# }
 
-# # Define Web Service
-# resource "aws_ecs_service" "web" {
-#   name            = "web"
-#   cluster         = aws_ecs_cluster.ecs_cluster.id
-#   task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-#   desired_count   = 1
-#   depends_on      = [aws_ecs_service.migrator]
-# }
+
+
+
+
