@@ -65,7 +65,7 @@ variable "key_name" {
   type        = string
   description = "Key Name"
   # default     = "./bookstore.pub"
-  default = "Bookstore_key"#"Rumit_Key"
+  default = "Bookstore_key" #"Rumit_Key"
 }
 
 ##########################################################################

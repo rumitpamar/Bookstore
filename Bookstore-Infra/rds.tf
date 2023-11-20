@@ -4,12 +4,12 @@ resource "random_password" "master" {
   override_special = "_!%^"
 }
 
-resource "aws_secretsmanager_secret" "database_password_new_12345678" {
-  name = "new-test-db-password-unique_34"
+resource "aws_secretsmanager_secret" "database_password_new_123456789" {
+  name = "new-test-db-password-unique_345"
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
-  secret_id     = aws_secretsmanager_secret.database_password_new_12345678.id
+  secret_id     = aws_secretsmanager_secret.database_password_new_123456789.id
   secret_string = random_password.master.result
 }
 
