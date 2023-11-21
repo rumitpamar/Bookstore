@@ -72,38 +72,103 @@ jobs:
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:app-latest
 
 
-
-
-# Start migrator task by default
     - name: Start Migrator Task
       run: |
-        # Replace 'migrator_task_definition' with the actual name of your migrator task definition
-        task_definition="migrator_task_definition"
-
-        task_response=$(aws ecs run-task --cluster bookstore-cluster --launch-type EC2 --task-definition $task_definition)
-        task_arn=$(echo "$task_response" | jq -r '.tasks[0].taskArn')
-        echo "Migrator Task ARN: $task_arn"
-
+            # Replace 'migrator_task_definition' with the actual name of your migrator task definition
+            task_definition="migrator_task_definition"
+        
+            # Start the migrator task using AWS CLI 'aws ecs run-task'
+            task_response=$(aws ecs run-task --cluster your-cluster-name --launch-type EC2 --task-definition $task_definition)
+            task_arn=$(echo "$task_response" | jq -r '.tasks[0].taskArn')
+            echo "Migrator Task ARN: $task_arn"
+        
     - name: Fetch RDS Endpoint
       run: |
-          RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
-          echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
-      
+            RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
+            echo "::set-env name=DB_HOST::$RDS_ENDPOINT"
+        
     - name: Check Database Connection
       run: |
-          psql -h ${{ env.DB_HOST }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT 1"
-          if [ $? -eq 0 ]; then
-            echo "Database connection successful. Stopping migrator task."
-            aws ecs update-service --cluster bookstore-cluster --service migrator --desired-count 0
-          else
-            echo "Database connection failed. Migrator task will continue."
-          fi
-      
+            psql -h ${{ env.DB_HOST }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT 1"
+            if [ $? -eq 0 ]; then
+              echo "Database connection successful. Stopping migrator task."
+              aws ecs stop-task --cluster your-cluster-name --task $task_arn
+            else
+              echo "Database connection failed. Migrator task will continue."
+            fi
+        
     - name: Update other services
       run: |
-          aws ecs update-service --cluster bookstore-cluster --service auth --force-new-deployment
-          aws ecs update-service --cluster bookstore-cluster --service app --force-new-deployment
-          aws ecs update-service --cluster bookstore-cluster --service web --force-new-deployment
+            aws ecs update-service --cluster your-cluster-name --service auth --force-new-deployment
+            aws ecs update-service --cluster your-cluster-name --service app --force-new-deployment
+            aws ecs update-service --cluster your-cluster-name --service web --force-new-deployment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # Start migrator task by default
+#     - name: Start Migrator Task
+#       run: |
+#         # Replace 'migrator_task_definition' with the actual name of your migrator task definition
+#         task_definition="migrator_task_definition"
+
+#         task_response=$(aws ecs run-task --cluster bookstore-cluster --launch-type EC2 --task-definition $task_definition)
+#         task_arn=$(echo "$task_response" | jq -r '.tasks[0].taskArn')
+#         echo "Migrator Task ARN: $task_arn"
+
+#     - name: Fetch RDS Endpoint
+#       run: |
+#           RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
+#           echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
+      
+#     - name: Check Database Connection
+#       run: |
+#           psql -h ${{ env.DB_HOST }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT 1"
+#           if [ $? -eq 0 ]; then
+#             echo "Database connection successful. Stopping migrator task."
+#             aws ecs update-service --cluster bookstore-cluster --service migrator --desired-count 0
+#           else
+#             echo "Database connection failed. Migrator task will continue."
+#           fi
+      
+#     - name: Update other services
+#       run: |
+#           aws ecs update-service --cluster bookstore-cluster --service auth --force-new-deployment
+#           aws ecs update-service --cluster bookstore-cluster --service app --force-new-deployment
+#           aws ecs update-service --cluster bookstore-cluster --service web --force-new-deployment
 
 
 
