@@ -97,6 +97,9 @@ jobs:
         
     - name: Setup PostgreSQL client
       run: sudo apt-get install -y postgresql-client
+    - name: Stop Migrator Task
+      run: |
+          aws ecs stop-task --cluster bookstore-cluster --task $task_arn
         
     # - name: Test Database Connection
     #   id: check-connection
@@ -110,15 +113,15 @@ jobs:
     #   run: |
     #     PGPASSWORD="$DB_PASSWORD" psql -h "postgres.cfw7rb0ojnm7.us-east-1.rds.amazonaws.com" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_DATABASE" -c "SELECT version();"
 
-    - name: Check PostgreSQL Connection
-      id: check-connection
-      run: psql -h postgres.cfw7rb0ojnm7.us-east-1.rds.amazonaws.com -p 5432 -U ${{ secrets.DBUSERNAME }} -d ${{ secrets.DATABASE }} -c "SELECT version();"
+    # - name: Check PostgreSQL Connection
+    #   id: check-connection
+    #   run: psql -h postgres.cfw7rb0ojnm7.us-east-1.rds.amazonaws.com -p 5432 -U ${{ secrets.DBUSERNAME }} -d ${{ secrets.DATABASE }} -c "SELECT version();"
       
 
-    - name: Stop Migrator Task
-      if: steps.check-connection.outputs.status == 'success'
-      run: |
-          aws ecs stop-task --cluster bookstore-cluster --task $task_arn
+    # - name: Stop Migrator Task
+    #   if: steps.check-connection.outputs.status == 'success'
+    #   run: |
+    #       aws ecs stop-task --cluster bookstore-cluster --task $task_arn
 
 
 
