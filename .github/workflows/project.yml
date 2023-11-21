@@ -97,9 +97,14 @@ jobs:
         
     - name: Setup PostgreSQL client
       run: sudo apt-get install -y postgresql-client
+    # - name: Stop Migrator Task
+    #   run: |
+    #       aws ecs stop-task --cluster bookstore-cluster --task $task_arn
+
     - name: Stop Migrator Task
       run: |
-          aws ecs stop-task --cluster bookstore-cluster --task $task_arn
+          aws ecs stop-task --cluster bookstore-cluster --task "$task_arn"
+
         
     # - name: Test Database Connection
     #   id: check-connection
