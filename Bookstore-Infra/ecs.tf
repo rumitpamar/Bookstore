@@ -162,15 +162,6 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
   ])
 }
 
-resource "aws_ecs_service" "migrator" {
-  name            = "migrator"
-  cluster         = aws_ecs_cluster.ecs_cluster.id
-  task_definition = aws_ecs_task_definition.migrator_task_definition.arn
-  desired_count   = 1
-  # depends_on      = [data.external.check_database]
-}
-
-
 #######################   ECS task for auth   #######################
 
 
@@ -200,7 +191,7 @@ resource "aws_ecs_service" "auth" {
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.auth_task_definition.arn
   desired_count   = 1
-  depends_on      = [aws_ecs_service.migrator]
+  depends_on      = [aws_ecs_task_definition.migrator_task_definition]
 }
 
 
@@ -232,7 +223,7 @@ resource "aws_ecs_service" "app" {
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.app_task_definition.arn
   desired_count   = 1
-  depends_on      = [aws_ecs_service.auth]
+  depends_on      = [aws_ecs_task_definition.migrator_task_definition]
 }
 
 
@@ -265,7 +256,7 @@ resource "aws_ecs_service" "web" {
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.web_task_definition.arn
   desired_count   = 1
-  depends_on      = [aws_ecs_service.app]
+  depends_on      = [aws_ecs_task_definition.migrator_task_definition]
 }
 
 

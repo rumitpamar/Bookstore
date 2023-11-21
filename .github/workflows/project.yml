@@ -74,6 +74,31 @@ jobs:
 
 
 
+# Start migrator task by default
+    - name: Start migrator task
+      run: aws ecs update-service --cluster bookstore-cluster --service migrator --desired-count 1
+
+    - name: Fetch RDS Endpoint
+      run: |
+        RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
+        echo "::set-env name=DB_HOST::$RDS_ENDPOINT"
+    
+    - name: Check Database Connection
+      run: |
+        psql -h ${{ env.DB_HOST }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT 1"
+        if [ $? -eq 0 ]; then
+          echo "Database connection successful. Stopping migrator task."
+          aws ecs update-service --cluster bookstore-cluster --service migrator --desired-count 0
+        else
+          echo "Database connection failed. Migrator task will continue."
+        fi
+    
+    - name: Update other services
+      run: |
+        aws ecs update-service --cluster bookstore-cluster --service auth --force-new-deployment
+        aws ecs update-service --cluster bookstore-cluster --service app --force-new-deployment
+        aws ecs update-service --cluster bookstore-cluster --service web --force-new-deployment
+    
 
 
 
@@ -176,6 +201,14 @@ jobs:
     # - name: Update ECS service
     #   run: |
     #         aws ecs update-service --cluster ${{ secrets.AWS_ECS_CLUSTER }} --service ${{ secrets.MIGRATOR }} --force-new-deployment
+
+
+
+
+
+
+
+
 
 
           
