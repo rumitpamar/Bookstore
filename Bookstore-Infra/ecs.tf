@@ -125,26 +125,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # data "external" "check_database" {
-#   program = ["sh", "-c", "./db_check.sh"]
+#   program = ["powershell.exe", "-File", "./db_check.ps1"]
 # }
 
 
@@ -175,12 +157,6 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
       ],
       "memory" : 512,
       "memoryReservation" : 256,
-      "essential" : true,
-      "entryPoint" : [
-        "/bin/bash",
-        "-c",
-        "chmod +x /path/to/db_check.sh && ./db_check.sh"
-      ]
 
     },
   ])
