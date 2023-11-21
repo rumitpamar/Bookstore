@@ -238,11 +238,6 @@ resource "aws_ecs_service" "app" {
 
 
 
-
-
-
-
-
 #######################   ECS task for web   #######################
 
 resource "aws_ecs_task_definition" "web_task_definition" {
