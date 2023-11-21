@@ -87,26 +87,80 @@ jobs:
               RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
               echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
       
-    - name: Check Database Connection and Stop Migrator
-      if: success() # This step only runs if all previous steps were successful
-      run: |
-         connected=false
-         while [ $connected != true ]; do
-         psql -h ${{ env.DB_HOST }} -U ${{ secrets.DBUSERNAME }} -d ${{ secrets.DATABASE }} -c "SELECT 1"
-         if [ $? -eq 0 ]; then
-           echo "Database connection successful."
-           connected=true
-         else
-           echo "Database connection failed. Migrator task will continue."
+              - name: Set up SSH key
+              uses: webfactory/ssh-agent@v0.5.3
+              with:
+                ssh-private-key: ${{ secrets.SSHKEY }}
         
-           sleep 10
-         fi 
-         done
+    - name: Establish SSH Tunnel
+      run: ssh -L 5432:${{ env.DB_HOST }}:5432 ec2-user@your-ec2-public-ip -N -f
+        
+    - name: Setup PostgreSQL client
+      run: sudo apt-get install -y postgresql-client
+        
+    - name: Test Database Connection
+      env:
+                DB_HOST: localhost
+                DB_PORT: 5432
+                DB_USERNAME: ${{ secrets.DB_USERNAME }}
+                DB_DATABASE: ${{ secrets.DB_DATABASE }}
+                DB_PASSWORD: ${{ secrets.DBPASSWORD }}
+      run: |
+                PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_DATABASE -c "SELECT version();"
 
-         if [ $connected = true ]; then
-           echo "Stopping migrator task..."
-           aws ecs stop-task --cluster your-cluster-name --task ${{ steps.start-migrator.outputs.task_arn }}
-         fi
+    - name: Stop Migrator Task
+      if: steps.check-connection.outputs.status == 'success'
+      run: |
+          aws ecs stop-task --cluster bookstore-cluster --task $task_arn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # - name: Check Database Connection and Stop Migrator
+    #   if: success() # This step only runs if all previous steps were successful
+    #   run: |
+    #      connected=false
+    #      while [ $connected != true ]; do
+    #      psql -h ${{ env.DB_HOST }} -U ${{ secrets.DBUSERNAME }} -d ${{ secrets.DATABASE }} -c "SELECT 1"
+    #      if [ $? -eq 0 ]; then
+    #        echo "Database connection successful."
+    #        connected=true
+    #      else
+    #        echo "Database connection failed. Migrator task will continue."
+        
+    #        sleep 10
+    #      fi 
+    #      done
+
+    #      if [ $connected = true ]; then
+    #        echo "Stopping migrator task..."
+    #        aws ecs stop-task --cluster your-cluster-name --task ${{ steps.start-migrator.outputs.task_arn }}
+    #      fi
 
 
 
