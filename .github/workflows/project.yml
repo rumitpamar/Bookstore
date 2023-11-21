@@ -87,10 +87,10 @@ jobs:
               RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
               echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
       
-              - name: Set up SSH key
-              uses: webfactory/ssh-agent@v0.5.3
-              with:
-                ssh-private-key: ${{ secrets.SSHKEY }}
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+          ssh-private-key: ${{ secrets.SSHKEY }}
         
     - name: Establish SSH Tunnel
       run: ssh -L 5432:${{ env.DB_HOST }}:5432 ec2-user@your-ec2-public-ip -N -f
