@@ -93,7 +93,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSHKEY }}
         
     - name: Establish SSH Tunnel
-      run: ssh -L 5432:${{ env.DB_HOST }}:5432 ec2-user@35.172.228.48 -N -f
+      run: ssh -o "StrictHostKeyChecking=no" -L 5432:${{ env.DB_HOST }}:5432 ec2-user@35.172.228.48 -N -f
         
     - name: Setup PostgreSQL client
       run: sudo apt-get install -y postgresql-client
