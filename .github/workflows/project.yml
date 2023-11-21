@@ -88,15 +88,27 @@ jobs:
               echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
           
         
-    - name: Check Database Connection
+    - name: Check Database Connection and Keep Migrator Running
+      id: check-connection
       run: |
-            psql -h ${{ env.DB_HOST }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT 1"
-            if [ $? -eq 0 ]; then
-              echo "Database connection successful. Stopping migrator task."
-              aws ecs stop-task --cluster your-cluster-name --task $task_arn
-            else
-              echo "Database connection failed. Migrator task will continue."
-            fi
+                connected=false
+                while [ $connected != true ]; do
+                  psql -h ${{ env.DB_HOST }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT 1"
+                  if [ $? -eq 0 ]; then
+                    echo "Database connection successful."
+                    connected=true
+                  else
+                    echo "Database connection failed. Migrator task will continue."
+                    # Wait for a brief period before trying again (adjust as needed)
+                    sleep 10
+                  fi
+                done
+            
+    - name: Stop Migrator Task
+      if: steps.check-connection.outputs.connected == 'true'
+      run: |
+                echo "Stopping migrator task..."
+                aws ecs stop-task --cluster your-cluster-name --task ${{ steps.migrator-task.outputs.task_arn }}
         
     - name: Update other services
       run: |
