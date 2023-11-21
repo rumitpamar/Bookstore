@@ -78,7 +78,7 @@ jobs:
             task_definition="migrator_task_definition"
         
             # Start the migrator task using AWS CLI 'aws ecs run-task'
-            task_response=$(aws ecs run-task --cluster your-cluster-name --launch-type EC2 --task-definition $task_definition)
+            task_response=$(aws ecs run-task --cluster bookstore-cluster --launch-type EC2 --task-definition $task_definition)
             task_arn=$(echo "$task_response" | jq -r '.tasks[0].taskArn')
             echo "Migrator Task ARN: $task_arn"
         
