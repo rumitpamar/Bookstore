@@ -75,7 +75,7 @@ jobs:
     - name: Start Migrator Task
       run: |
             # Replace 'migrator_task_definition' with the actual name of your migrator task definition
-            task_definition="migrator_task_definition"
+            task_definition="migrator"
         
             # Start the migrator task using AWS CLI 'aws ecs run-task'
             task_response=$(aws ecs run-task --cluster bookstore-cluster --launch-type EC2 --task-definition $task_definition)
