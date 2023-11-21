@@ -84,8 +84,9 @@ jobs:
         
     - name: Fetch RDS Endpoint
       run: |
-            RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
-            echo "::set-env name=DB_HOST::$RDS_ENDPOINT"
+              RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
+              echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
+          
         
     - name: Check Database Connection
       run: |
