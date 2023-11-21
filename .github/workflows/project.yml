@@ -100,13 +100,13 @@ jobs:
         
     - name: Test Database Connection
       env:
-                DB_HOST: localhost
-                DB_PORT: 5432
-                DB_USERNAME: ${{ secrets.DB_USERNAME }}
-                DB_DATABASE: ${{ secrets.DB_DATABASE }}
-                DB_PASSWORD: ${{ secrets.DBPASSWORD }}
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_USERNAME: ${{ secrets.DBHOST }}
+        DB_DATABASE: ${{ secrets.DBUSERNAME }}
+        DB_PASSWORD: ${{ secrets.DBPASSWORD }}
       run: |
-                PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d $DB_DATABASE -c "SELECT version();"
+        PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_DATABASE" -c "SELECT version();"
 
     - name: Stop Migrator Task
       if: steps.check-connection.outputs.status == 'success'
