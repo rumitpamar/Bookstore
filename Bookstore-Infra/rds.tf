@@ -4,12 +4,12 @@ resource "random_password" "master" {
   override_special = "_!%^"
 }
 
-resource "aws_secretsmanager_secret" "database_password_new_123456789012" {
-  name = "new-test-db-password-unique_345678"
+resource "aws_secretsmanager_secret" "database_password_new_1234567890123" {
+  name = "new-test-db-password-unique_3456789"
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
-  secret_id     = aws_secretsmanager_secret.database_password_new_123456789012.id
+  secret_id     = aws_secretsmanager_secret.database_password_new_1234567890123.id
   secret_string = random_password.master.result
 }
 
@@ -34,4 +34,7 @@ resource "aws_db_instance" "postgres" {
   skip_final_snapshot       = true
   final_snapshot_identifier = "worker-final"
   publicly_accessible       = false
+}
+output "rds_endpoint" {
+  value = aws_db_instance.postgres.endpoint
 }
