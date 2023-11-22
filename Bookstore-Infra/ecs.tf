@@ -155,8 +155,8 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
           "hostPort" : 8080
         }
       ],
-      "memory" : 256,#2048, #256, #1024,
-      "memoryReservation" : 128,#512,
+      "memory" : 4096, #256,#2048, #256, #1024,
+      "memoryReservation" : 4096,#512,
 
     },
   ])
@@ -179,8 +179,8 @@ resource "aws_ecs_task_definition" "auth_task_definition" {
           "hostPort" : 8089 
         }
       ],
-      "memory" : 256, #682, #256, #1024,
-      "memoryReservation" : 128, #512,
+      "memory" : 1365,#256, #682, #256, #1024,
+      "memoryReservation" : 1365, #512,
 
     },
   ])
@@ -212,8 +212,8 @@ resource "aws_ecs_task_definition" "app_task_definition" {
           "hostPort" : 8088
         }
       ],
-      "memory" : 256,#682, #256, #1024,
-      "memoryReservation" : 128,#512,
+      "memory" : 1365, #256,#682, #256, #1024,
+      "memoryReservation" : 1365,#512,
     },
   ])
 }
@@ -244,8 +244,8 @@ resource "aws_ecs_task_definition" "web_task_definition" {
           "hostPort" : 8086
         }
       ],
-      "memory" :256,#682, #256, #1024,
-      "memoryReservation" : 128, #@512,
+      "memory" :1365,#256,#682, #256, #1024,
+      "memoryReservation" : 1365, #@512,
 
     },
   ])
