@@ -104,7 +104,7 @@ jobs:
     - name: Stop Migrator Task
       run: |
           aws ecs stop-task --cluster bookstore-cluster --task "$task_arn"
-
+#
         
     # - name: Test Database Connection
     #   id: check-connection
