@@ -148,15 +148,15 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "migrator",
-      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:migrator-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:migrator-latest", #"nginx:latest"
       "portMappings" : [
         {
           "containerPort" : 80,
           "hostPort" : 8080
         }
       ],
-      "memory" : 1024,
-      "memoryReservation" : 512,
+      "memory" : 256, #1024,
+      "memoryReservation" : 128, #512,
 
     },
   ])
@@ -172,15 +172,15 @@ resource "aws_ecs_task_definition" "auth_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "auth-container",
-      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:auth-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:auth-latest", #"nginx:latest"
       "portMappings" : [
         {
           "containerPort" : 80,
           "hostPort" : 8081
         }
       ],
-      "memory" : 1024,
-      "memoryReservation" : 512,
+      "memory" : 256, #1024,
+      "memoryReservation" : 128, #512,
 
     },
   ])
@@ -205,15 +205,15 @@ resource "aws_ecs_task_definition" "app_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "app-container",
-      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:app-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:app-latest", #"nginx:latest"#
       "portMappings" : [
         {
           "containerPort" : 80,
           "hostPort" : 8082
         }
       ],
-      "memory" : 1024,
-      "memoryReservation" : 512,
+      "memory" : 256, #1024,
+      "memoryReservation" : 128,#512,
     },
   ])
 }
@@ -237,15 +237,15 @@ resource "aws_ecs_task_definition" "web_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "web",
-      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:web-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:web-latest",#"nginx:latest"#
       "portMappings" : [
         {
           "containerPort" : 80,
           "hostPort" : 8083
         }
       ],
-      "memory" : 1024,
-      "memoryReservation" : 512,
+      "memory" :256, #1024,
+      "memoryReservation" : 128, #512,
 
     },
   ])

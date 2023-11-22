@@ -58,7 +58,7 @@ variable "AMI" {
 variable "asg_instance_type" {
   type        = string
   description = "Instance Type"
-  default     = "t3.medium"
+  default     = "t3.micro"#"t3.medium"
 }
 
 variable "key_name" {
