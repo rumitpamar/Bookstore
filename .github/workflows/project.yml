@@ -75,7 +75,6 @@ jobs:
     - name: Start ECS Task
       run: |
             aws ecs run-task --cluster bookstore-cluster --task-definition migrator --launch-type EC2
-            aws ecs describe-tasks --cluster bookstore-cluster --tasks migrator 
             
     - name: Update other services
       run: |

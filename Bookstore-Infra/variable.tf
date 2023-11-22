@@ -58,7 +58,7 @@ variable "AMI" {
 variable "asg_instance_type" {
   type        = string
   description = "Instance Type"
-  default     = "t3.micro"
+  default     = "t3.medium"
 }
 
 variable "key_name" {
@@ -101,8 +101,7 @@ variable "db_instance_class" {
 }
 
 variable "repository_names" {
-  type    = list(string)
-  default = ["bookstore"]
+  default = "bookstore"
 }
 
 # variable "launch_configuration_name" {

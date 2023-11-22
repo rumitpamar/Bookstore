@@ -148,7 +148,7 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "migrator",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:migrator-lates",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:migrator-latest",
       "portMappings" : [
         {
           "containerPort" : 80,
@@ -172,7 +172,7 @@ resource "aws_ecs_task_definition" "auth_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "auth-container",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:auth-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:auth-latest",
       "portMappings" : [
         {
           "containerPort" : 80,
@@ -205,7 +205,7 @@ resource "aws_ecs_task_definition" "app_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "app-container",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:app-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:app-latest",
       "portMappings" : [
         {
           "containerPort" : 80,
@@ -237,7 +237,7 @@ resource "aws_ecs_task_definition" "web_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "web",
-      "image" : "${aws_ecr_repository.ecr_repo[0].repository_url}:web-latest",
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:web-latest",
       "portMappings" : [
         {
           "containerPort" : 80,
