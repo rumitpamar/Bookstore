@@ -136,7 +136,10 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.project}-cluster"
 }
 
-
+resource "aws_cloudwatch_log_group" "migrator_log_group" {
+  name              = "/ecs/migrator-logs"
+  retention_in_days = 7 # Modify retention as needed
+}
 
 #######################   ECS task for migrator   #######################
 
@@ -157,6 +160,14 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
       ],
       "memory" : 256,#2048, #256, #1024,
       "memoryReservation" : 128,#4096,#512,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/migrator-logs",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
 
     },
   ])
