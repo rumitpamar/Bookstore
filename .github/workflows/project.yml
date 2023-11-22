@@ -72,39 +72,33 @@ jobs:
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/${{ secrets.MAINREPO }}:app-latest
 
 
-    - name: Start Migrator Task
+    - name: Start ECS Task
       run: |
-            # Replace 'migrator_task_definition' with the actual name of your migrator task definition
-            task_definition="migrator"
+            aws ecs run-task --cluster bookstore-cluster --task-definition migrator --launch-type EC2
         
-            # Start the migrator task using AWS CLI 'aws ecs run-task'
-            task_response=$(aws ecs run-task --cluster bookstore-cluster --launch-type EC2 --task-definition $task_definition)
-            task_arn=$(echo "$task_response" | jq -r '.tasks[0].taskArn')
-            echo "Migrator Task ARN: $task_arn"
-        
-    - name: Fetch RDS Endpoint
-      run: |
-              RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
-              echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
+#     - name: Fetch RDS Endpoint
+#       run: |
+#               RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[0].Endpoint.Address" --output text)
+#               echo "DB_HOST=$RDS_ENDPOINT" >> $GITHUB_ENV
       
-    - name: Set up SSH key
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-          ssh-private-key: ${{ secrets.SSHKEY }}
+#     - name: Set up SSH key
+#       uses: webfactory/ssh-agent@v0.5.3
+#       with:
+#           ssh-private-key: ${{ secrets.SSHKEY }}
         
-    - name: Establish SSH Tunnel
-      run: ssh -o "StrictHostKeyChecking=no" -L 5432:${{ env.DB_HOST }}:5432 ec2-user@35.172.228.48 -N -f
+#     - name: Establish SSH Tunnel
+#       run: ssh -o "StrictHostKeyChecking=no" -L 5432:${{ env.DB_HOST }}:5432 ec2-user@35.172.228.48 -N -f
         
-    - name: Setup PostgreSQL client
-      run: sudo apt-get install -y postgresql-client
-    # - name: Stop Migrator Task
-    #   run: |
-    #       aws ecs stop-task --cluster bookstore-cluster --task $task_arn
+#     - name: Setup PostgreSQL client
+#       run: sudo apt-get install -y postgresql-client
+#     # - name: Stop Migrator Task
+#     #   run: |
+#     #       aws ecs stop-task --cluster bookstore-cluster --task $task_arn
 
-    - name: Stop Migrator Task
-      run: |
-          aws ecs stop-task --cluster bookstore-cluster --task "$task_arn"
-#
+#     - name: Stop Migrator Task
+#       run: |
+#           aws ecs stop-task --cluster bookstore-cluster --task "$task_arn"
+# #
         
     # - name: Test Database Connection
     #   id: check-connection

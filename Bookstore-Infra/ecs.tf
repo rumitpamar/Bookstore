@@ -152,11 +152,11 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
       "portMappings" : [
         {
           "containerPort" : 80,
-          "hostPort" : 80
+          "hostPort" : 8080
         }
       ],
-      "memory" : 512,
-      "memoryReservation" : 256,
+      "memory" : 256,
+      "memoryReservation" : 128,
 
     },
   ])
@@ -176,11 +176,11 @@ resource "aws_ecs_task_definition" "auth_task_definition" {
       "portMappings" : [
         {
           "containerPort" : 80,
-          "hostPort" : 80
+          "hostPort" : 8081
         }
       ],
-      "memory" : 512,
-      "memoryReservation" : 256,
+      "memory" : 256,
+      "memoryReservation" : 128,
 
     },
   ])
@@ -209,11 +209,11 @@ resource "aws_ecs_task_definition" "app_task_definition" {
       "portMappings" : [
         {
           "containerPort" : 80,
-          "hostPort" : 80
+          "hostPort" : 8082
         }
       ],
-      "memory" : 512,
-      "memoryReservation" : 256,
+      "memory" : 256,
+      "memoryReservation" : 128,
     },
   ])
 }
@@ -241,11 +241,11 @@ resource "aws_ecs_task_definition" "web_task_definition" {
       "portMappings" : [
         {
           "containerPort" : 80,
-          "hostPort" : 80
+          "hostPort" : 8083
         }
       ],
-      "memory" : 512,
-      "memoryReservation" : 256,
+      "memory" : 256,
+      "memoryReservation" : 128,
 
     },
   ])
