@@ -75,6 +75,33 @@ jobs:
     - name: Start ECS Task
       run: |
             aws ecs run-task --cluster bookstore-cluster --task-definition migrator --launch-type EC2
+            aws ecs describe-tasks --cluster bookstore-cluster --tasks migrator 
+            
+    - name: Update other services
+      run: |
+            aws ecs update-service --cluster bookstore-cluster --service auth --force-new-deployment
+            aws ecs update-service --cluster bookstore-cluster --service app --force-new-deployment
+            aws ecs update-service --cluster bookstore-cluster --service web --force-new-deployment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 #     - name: Fetch RDS Endpoint
 #       run: |
@@ -219,11 +246,7 @@ jobs:
     #             echo "Stopping migrator task..."
     #             aws ecs stop-task --cluster your-cluster-name --task ${{ steps.migrator-task.outputs.task_arn }}
         
-    - name: Update other services
-      run: |
-            aws ecs update-service --cluster your-cluster-name --service auth --force-new-deployment
-            aws ecs update-service --cluster your-cluster-name --service app --force-new-deployment
-            aws ecs update-service --cluster your-cluster-name --service web --force-new-deployment
+    
 
 
 
