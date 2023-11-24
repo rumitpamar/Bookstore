@@ -192,7 +192,14 @@ resource "aws_ecs_task_definition" "auth_task_definition" {
       ],
       "memory" : 256, #682, #256, #1024,
       "memoryReservation" : 128, #512,
-
+"logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/auth-logs",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+}
     },
   ])
 }
@@ -225,6 +232,14 @@ resource "aws_ecs_task_definition" "app_task_definition" {
       ],
       "memory" : 256,#682, #256, #1024,
       "memoryReservation" : 128,#512,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/app-logs",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
     },
   ])
 }
@@ -257,7 +272,14 @@ resource "aws_ecs_task_definition" "web_task_definition" {
       ],
       "memory" :256,#682, #256, #1024,
       "memoryReservation" : 128, #@512,
-
+"logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/web-logs",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+}
     },
   ])
 }
