@@ -1,13 +1,10 @@
 resource "aws_launch_configuration" "ecs_launch" {
-  name          = "${var.project}-Launch-config"
-  image_id      = var.AMI
-  instance_type = var.asg_instance_type
-  key_name      = var.key_name
-  user_data     = "#!/bin/bash \n echo ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config"
-  #user_data = base64encode(var.lg_user_data)
-
-  security_groups = [aws_security_group.ecs_sg.id]
-
+  name                 = "${var.project}-Launch-config"
+  image_id             = var.AMI
+  instance_type        = var.asg_instance_type
+  key_name             = var.key_name
+  user_data            = "#!/bin/bash \n echo ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config"
+  security_groups      = [aws_security_group.ecs_sg.id]
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
 }
 

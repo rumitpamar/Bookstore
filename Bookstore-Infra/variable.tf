@@ -103,8 +103,3 @@ variable "db_instance_class" {
 variable "repository_names" {
   default = "bookstore"
 }
-
-# variable "launch_configuration_name" {
-#     description = "output of the AWS launch_configuration"
-
-# }
