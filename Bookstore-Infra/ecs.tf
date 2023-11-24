@@ -136,11 +136,10 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.project}-cluster"
 }
 
-resource "aws_cloudwatch_log_group" "migrator_log_group" {
-  name              = "/ecs/migrator-logs"
-  retention_in_days = 7 # Modify retention as needed
+resource "aws_cloudwatch_log_group" "ecs_logs" {
+  name              = "/ecs/logs"
+  retention_in_days = 7
 }
-
 #######################   ECS task for migrator   #######################
 
 
@@ -158,14 +157,14 @@ resource "aws_ecs_task_definition" "migrator_task_definition" {
           "hostPort" : 8080
         }
       ],
-      "memory" : 256,#2048, #256, #1024,
-      "memoryReservation" : 128,#4096,#512,
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/migrator-logs",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
+      "memory" : 256,            #2048, #256, #1024,
+      "memoryReservation" : 128, #4096,#512,
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : "/ecs/logs", # Using the consolidated log group
+          "awslogs-region" : "us-east-1",
+          "awslogs-stream-prefix" : "migrator" # Identifying prefix for the log stream
         }
       }
 
@@ -187,19 +186,19 @@ resource "aws_ecs_task_definition" "auth_task_definition" {
       "portMappings" : [
         {
           "containerPort" : 80,
-          "hostPort" : 8089 
+          "hostPort" : 8089
         }
       ],
-      "memory" : 256, #682, #256, #1024,
+      "memory" : 256,            #682, #256, #1024,
       "memoryReservation" : 128, #512,
-"logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/auth-logs",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : "/ecs/logs",
+          "awslogs-region" : "us-east-1",
+          "awslogs-stream-prefix" : "auth"
         }
-}
+      }
     },
   ])
 }
@@ -230,14 +229,14 @@ resource "aws_ecs_task_definition" "app_task_definition" {
           "hostPort" : 8088
         }
       ],
-      "memory" : 256,#682, #256, #1024,
-      "memoryReservation" : 128,#512,
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/app-logs",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
+      "memory" : 256,            #682, #256, #1024,
+      "memoryReservation" : 128, #512,
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : "/ecs/logs",
+          "awslogs-region" : "us-east-1",
+          "awslogs-stream-prefix" : "app"
         }
       }
     },
@@ -263,23 +262,23 @@ resource "aws_ecs_task_definition" "web_task_definition" {
   container_definitions = jsonencode([
     {
       "name" : "web",
-      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:web-latest",#"nginx:latest"#
+      "image" : "${aws_ecr_repository.ecr_repo.repository_url}:web-latest", #"nginx:latest"#
       "portMappings" : [
         {
           "containerPort" : 80,
           "hostPort" : 8086
         }
       ],
-      "memory" :256,#682, #256, #1024,
+      "memory" : 256,            #682, #256, #1024,
       "memoryReservation" : 128, #@512,
-"logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/web-logs",
-          "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs"
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : "/ecs/logs",
+          "awslogs-region" : "us-east-1",
+          "awslogs-stream-prefix" : "web"
         }
-}
+      }
     },
   ])
 }
