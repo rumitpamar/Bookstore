@@ -103,3 +103,9 @@ variable "db_instance_class" {
 variable "repository_names" {
   default = "bookstore"
 }
+
+
+
+variable "username" {
+  description = "Enter the username for the database"
+}
