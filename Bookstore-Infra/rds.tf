@@ -4,12 +4,12 @@ resource "random_password" "master" {
   override_special = "_!%^"
 }
 
-resource "aws_secretsmanager_secret" "database_passwordnew12345" {
-  name = "new-test-db-password-uniquenew12345"
+resource "aws_secretsmanager_secret" "database_passwordnew1234567" {
+  name = "new-test-db-password-uniquenew1234567"
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
-  secret_id     = aws_secretsmanager_secret.database_passwordnew12345.id
+  secret_id     = aws_secretsmanager_secret.database_passwordnew1234567.id
   secret_string = random_password.master.result
 }
 
@@ -30,8 +30,8 @@ resource "aws_db_instance" "postgres" {
   engine                  = "postgres"
   engine_version          = "14.7"
   instance_class          = var.db_instance_class
-  username                = "admin123"
-  #username = var.username   this must be uncommented during implementation and need to provide user input for the username variable during terrafrom apply
+  #username                = "admin123"
+  username = var.username   #this must be uncommented during implementation and need to provide user input for the username variable during terrafrom apply
   password                  = aws_secretsmanager_secret_version.password.secret_string
   port                      = "5432"
   db_subnet_group_name      = aws_db_subnet_group.db_subnet_group.id

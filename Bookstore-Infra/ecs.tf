@@ -160,4 +160,4 @@ resource "aws_ecs_service" "web" {
   task_definition = aws_ecs_task_definition.web_task_definition.arn
   desired_count   = 1
   depends_on      = [aws_ecs_task_definition.migrator_task_definition]
-}
+} 
